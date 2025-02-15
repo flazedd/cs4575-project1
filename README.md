@@ -83,6 +83,7 @@ SERVICE_NAME: rapl
 
 
 ### Step 6: Run the project
+Make sure to launch your IDE/terminal in Administrator mode! 
 
 ```bash
 poetry run python .\cs4575_project1\main.py
