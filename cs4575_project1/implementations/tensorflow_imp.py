@@ -53,3 +53,6 @@ def tensor_task():
     # 5️⃣ Evaluate on Test Data
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
     print(f"Test Accuracy: {test_acc * 100:.2f}%")
+
+
+tensor_task()
