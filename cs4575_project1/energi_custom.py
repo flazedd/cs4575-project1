@@ -3,6 +3,11 @@ import time
 import os
 import keyboard
 import re
+from colorama import Fore, Style
+
+def print_color(message, success=True):
+    prefix = f"{Fore.GREEN}[+]{Style.RESET_ALL}" if success else f"{Fore.RED}[-]{Style.RESET_ALL}"
+    print(f"{prefix} {message}")
 
 class EnergiCustom:
     def __init__(self, output="results.csv"):
@@ -12,7 +17,7 @@ class EnergiCustom:
         self.output = output
 
     def start(self):
-        print(f'Output will be saved in {self.output} once you call stop()')
+        print_color(f'Output will be saved in {self.output} once you call stop()')
         # Get the directory of the current script
         script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -31,7 +36,7 @@ class EnergiCustom:
         self.process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     def stop(self):
-        print(f'Saving output in {self.output}')
+        print_color(f'Saving output in {self.output}')
         # Simulate pressing a key to trigger early output
         keyboard.press_and_release('enter')  # Replace with the key that triggers early output
 
@@ -55,18 +60,20 @@ class EnergiCustom:
             self.seconds = match.group(2)
             return self.joules, self.seconds
         else:
-            print("Energy consumption data not found.")
+            print_color("Energy consumption data not found.", success=False
+
+                        )
             return None, None
 
     def cleanup(self):
-        print(f'Cleaning up process...')
+        print_color(f'Cleaning up process...')
         self.process.kill()
         if self.process.poll() is None:
-            print("Terminating the process.")
+            print_color("Terminating the process.")
             self.process.terminate()  # Gracefully terminate the process
             self.process.wait()  # Wait for the process to terminate
         else:
-            print("Process already terminated.")
+            print_color("Process already terminated.")
 
 
 if __name__ == "__main__":

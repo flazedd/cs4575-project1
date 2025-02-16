@@ -63,7 +63,7 @@ Output:
 ```
 
 
-Then
+Then this command needs to be run everytime you reboot your pc...
 ```powershell
 sc start rapl
 ```
