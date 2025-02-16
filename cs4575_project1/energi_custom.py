@@ -60,9 +60,8 @@ class EnergiCustom:
             self.seconds = match.group(2)
             return self.joules, self.seconds
         else:
-            print_color("Energy consumption data not found.", success=False
-
-                        )
+            print_color("Energy consumption data not found. "
+                        "You probably need to run: sc start rapl in Admin CMD again", success=False)
             return None, None
 
     def cleanup(self):

@@ -1,8 +1,20 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+import numpy as np
+import random
+
+def set_tensorflow_seed(seed=42):
+    # Set the random seed for reproducibility
+    np.random.seed(seed)
+    random.seed(seed)
+    tf.random.set_seed(seed)
+
+
 
 def tensor_task():
+    # Example usage:
+    set_tensorflow_seed(42)
     # 1️⃣ Load & Preprocess MNIST Dataset
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
@@ -15,16 +27,20 @@ def tensor_task():
 
     # 2️⃣ Define CNN Model
     model = keras.Sequential([
-        layers.Conv2D(32, kernel_size=3, padding="same", activation="relu", input_shape=(28, 28, 1)),
-        layers.MaxPooling2D(pool_size=2, strides=2),
+    # First Convolutional Layer
+    layers.Conv2D(64, kernel_size=3, padding="same", activation="relu", input_shape=(28, 28, 1)),
+    layers.MaxPooling2D(pool_size=2, strides=2),
 
-        layers.Conv2D(64, kernel_size=3, padding="same", activation="relu"),
-        layers.MaxPooling2D(pool_size=2, strides=2),
+    # Second Convolutional Layer
+    layers.Conv2D(128, kernel_size=5, padding="same", activation="relu"),
+    layers.MaxPooling2D(pool_size=2, strides=2),
 
-        layers.Flatten(),
-        layers.Dense(128, activation="relu"),
-        layers.Dense(10, activation="softmax")  # Output layer for 10 classes
-    ])
+    # Flatten Layer (equivalent to x.view(x.size(0), -1) in PyTorch)
+    layers.Flatten(),
+
+    # Fully Connected Layer
+    layers.Dense(10, activation="softmax")  # Assuming the output has 10 classes, like MNIST
+])
 
     # 3️⃣ Compile the Model
     model.compile(optimizer="adam",
