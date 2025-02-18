@@ -1,8 +1,10 @@
 import time
 
-from cs4575_project1.implementations.pytorch_imp import torch_task
+from implementations.pytorch_imp import torch_task
 from energi_custom import EnergiCustom
-from implementations.tensorflow_imp import tensor_task
+# from implementations.tensorflow_imp import tensor_task
+
+
 
 def task():
     for i in range(3):
@@ -14,8 +16,8 @@ energi.start()  # Start the subprocess
 
 
 # Insert actual task here
-# task()
-tensor_task()
+task()
+# tensor_task()
 # torch_task()
 
 joules, seconds = energi.stop()  # Stop and get joules and seconds, if it hangs = deadlock, just CTRL+C
