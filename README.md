@@ -1,9 +1,9 @@
 # CS4575 Project 1 - Instructions
 
-### Step 1: Install Python 3.12
+### Step 1: Install Python 3.11.8
 
-1. Download Python 3.12 from the official website:
-   - Visit [Python 3.12.0 Downloads](https://www.python.org/downloads/release/python-3120/)
+1. Download Python 3.11.8 from the official website:
+   - Visit [Python 3.11.8 Downloads](https://www.python.org/downloads/release/python-3118/)
    - Select the appropriate installer for your system (Windows, macOS, Linux)
 
 2. Verify Python Installation
@@ -12,7 +12,7 @@ py --version
 ```
 Output:
 ```
-Python 3.12.7
+Python 3.11.8
 ```
 
 ### Step 2: Install Poetry
