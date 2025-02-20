@@ -12,7 +12,7 @@ py --version
 ```
 Output:
 ```
-Python 3.12.7
+Python 3.11.
 ```
 
 ### Step 2: Install Poetry
