@@ -1,9 +1,9 @@
 # CS4575 Project 1 - Instructions
 
-### Step 1: Install Python 3.11
+### Step 1: Install Python 3.11.8
 
-1. Download Python 3.11 from the official website:
-   - Visit [Python 3.11.0 Downloads](https://www.python.org/downloads/release/python-3110/)
+1. Download Python 3.11.8 from the official website:
+   - Visit [Python 3.11.8 Downloads](https://www.python.org/downloads/release/python-3118/)
    - Select the appropriate installer for your system (Windows, macOS, Linux)
 
 2. Verify Python Installation
@@ -12,7 +12,7 @@ py --version
 ```
 Output:
 ```
-Python 3.11.
+Python 3.11.8
 ```
 
 ### Step 2: Install Poetry
