@@ -1,9 +1,11 @@
 from results_extraction import Result
 from pathlib import Path
 
-relative_path = "cs4575_project1/results/dummy"
-absolute_path = Path(relative_path).resolve()
+# relative_path =
+absolute_path = Path("../results/keras").resolve()
 
-r = Result("test", '/Users/razvanloghin/Desktop/TUD-Shit/Y4/Q3/Sustainable SE/cs4575-project1/cs4575_project1/results/dummy')
+print(absolute_path)
+
+r = Result("test", absolute_path)
 r.extract()
 r.print_results()

@@ -19,7 +19,7 @@ frameworks_dict = {
 frameworks = list(frameworks_dict.keys())
 utils.create_framework_dirs(frameworks)
 energi = EnergiCustom()
-iterations = 2
+iterations = 10
 utils.cpu_ram_warmup()
 for i in range(iterations):
     random.shuffle(frameworks)

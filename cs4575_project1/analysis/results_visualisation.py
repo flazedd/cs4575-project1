@@ -1,9 +1,10 @@
 from results_extraction import Result
+from pathlib import Path
 
 #TODO: Add the actual paths to the results from each library
-results_jaxx = Result("Jaxx", "TO BE ADDED")
-results_pytorch = Result("Pytorch", "TO BE ADDED")
-results_tensorflow = Result("Tensorflow", "TO BE ADDED")
+results_jaxx = Result("Jaxx", Path("../results/jaxx").resolve())
+results_pytorch = Result("Pytorch", Path("../results/torch").resolve())
+results_tensorflow = Result("Tensorflow", Path("../results/keras").resolve())
 
 results_jaxx.extract()
 results_pytorch.extract()
