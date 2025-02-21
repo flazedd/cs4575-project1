@@ -116,7 +116,28 @@ def jax_task():
             )
             print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
 
-    train(train_loader, epochs=constants.EPOCHS)
+        return model, params, optimizer, opt_state
+
+    model, params, optimizer, opt_state = train(train_loader, epochs=constants.EPOCHS)
+
+    # Eval step
+    correct = 0
+    total = 0
+    for inputs, labels in test_loader:
+        inputs = inputs.permute(0, 2, 3, 1)  # Rearrange to (B, H, W, C), since JAX uses Channel as last dim
+
+        # Convert inputs and labels to JAX arrays
+        inputs = jnp.array(inputs.numpy())
+        labels = jnp.array(labels.numpy())
+
+        # Compute metrics
+        logits = model.apply(params, inputs)
+        predicted = jnp.argmax(logits, axis=1)
+        total += labels.shape[0]
+        correct += (predicted == labels).sum().item()
+
+    test_accuracy = 100 * correct / total
+    print(f"Test Accuracy: {test_accuracy:.2f}%")
     
 if __name__ == "__main__":
     jax_task()
