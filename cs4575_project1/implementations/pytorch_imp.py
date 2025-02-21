@@ -11,27 +11,26 @@ def set_pytorch_seed(seed=42):
     np.random.seed(seed)
     random.seed(seed)
     torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)  # If using GPUs, ensure CUDA has the same seed
-    torch.backends.cudnn.deterministic = True  # Ensure deterministic algorithms
-    torch.backends.cudnn.benchmark = False  # Disable autotuner to ensure reproducibility
-
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 def torch_task():
-    # Example usage:
+    # Set the seed for reproducibility
     set_pytorch_seed(42)
 
     # 1️⃣ Load & Preprocess MNIST Dataset
     transform = transforms.Compose([
         transforms.ToTensor(),  # Convert to tensor
-        transforms.Normalize((0.5,), (0.5,))  # Normalize to [-1, 1] for better training stability
+        transforms.Normalize((0,), (1,))  # Normalize
     ])
 
-    train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-    test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+    # Ensure the dataset is available; set download=True if needed
+    train_dataset = datasets.MNIST(root='.\data', train=True, download=False, transform=transform)
+    test_dataset  = datasets.MNIST(root='.\data', train=False, download=False, transform=transform)
 
     train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
-
+    test_loader  = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
     # 2️⃣ Define CNN Model
     class CNNModel(nn.Module):
@@ -54,33 +53,31 @@ def torch_task():
             x = self.fc(x)
             return x
 
-
-    # Initialize the model
     model = CNNModel()
 
-    # 3️⃣ Compile the Model (loss and optimizer in PyTorch)
-    criterion = nn.CrossEntropyLoss()  # Loss function for multi-class classification
-    optimizer = optim.Adam(model.parameters())  # Adam optimizer
+    # 3️⃣ Compile the Model (define loss and optimizer)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters())
 
-    # 4️⃣ Train the Model
-    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # Set device; for consistency, using CPU here
     device = torch.device('cpu')
     model.to(device)
 
+    # 4️⃣ Train the Model
     epochs = 5
     for epoch in range(epochs):
-        model.train()  # Set the model to training mode
+        model.train()
         running_loss = 0.0
         correct = 0
         total = 0
         for inputs, labels in train_loader:
             inputs, labels = inputs.to(device), labels.to(device)
 
-            optimizer.zero_grad()  # Zero the gradients
+            optimizer.zero_grad()  # Zero gradients
             outputs = model(inputs)  # Forward pass
-            loss = criterion(outputs, labels)  # Compute the loss
+            loss = criterion(outputs, labels)
             loss.backward()  # Backpropagation
-            optimizer.step()  # Optimize the parameters
+            optimizer.step()  # Update parameters
 
             running_loss += loss.item()
             _, predicted = torch.max(outputs, 1)
@@ -92,10 +89,10 @@ def torch_task():
         print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
 
     # 5️⃣ Evaluate the Model on Test Data
-    model.eval()  # Set the model to evaluation mode
+    model.eval()
     correct = 0
     total = 0
-    with torch.no_grad():  # No gradients needed for evaluation
+    with torch.no_grad():
         for inputs, labels in test_loader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
@@ -105,3 +102,6 @@ def torch_task():
 
     test_accuracy = 100 * correct / total
     print(f"Test Accuracy: {test_accuracy:.2f}%")
+
+if __name__ == "__main__":
+    torch_task()

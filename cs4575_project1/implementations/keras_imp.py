@@ -11,8 +11,7 @@ def set_tensorflow_seed(seed=42):
     tf.random.set_seed(seed)
 
 
-
-def tensor_task():
+def keras_task():
     # Example usage:
     set_tensorflow_seed(42)
     # 1️⃣ Load & Preprocess MNIST Dataset
@@ -54,5 +53,5 @@ def tensor_task():
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
     print(f"Test Accuracy: {test_acc * 100:.2f}%")
 
-
-tensor_task()
+if __name__ == "__main__":
+    keras_task()

@@ -13,7 +13,7 @@ def set_seed(seed=42):
     return jax.random.PRNGKey(seed)
 
 
-def torch_task():
+def jax_task():
     # Example usage:
     main_key = set_seed(42)
 
@@ -22,8 +22,8 @@ def torch_task():
         transforms.Normalize((0,), (1,))  # Normalize
     ])
 
-    train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-    test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+    train_dataset = datasets.MNIST(root='./data', train=True, download=False, transform=transform)
+    test_dataset = datasets.MNIST(root='./data', train=False, download=False, transform=transform)
 
     train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
@@ -117,5 +117,6 @@ def torch_task():
             print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
 
     train(train_loader, epochs=5)
+    
 if __name__ == "__main__":
-    torch_task()
+    jax_task()
