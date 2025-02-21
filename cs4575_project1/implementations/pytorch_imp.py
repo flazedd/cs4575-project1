@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import numpy as np
 import random
+import cs4575_project1.implementations.constants as constants
 
 def set_pytorch_seed(seed=42):
     # Set the random seed for reproducibility
@@ -64,7 +65,7 @@ def torch_task():
     model.to(device)
 
     # 4️⃣ Train the Model
-    epochs = 5
+    epochs = constants.EPOCHS
     for epoch in range(epochs):
         model.train()
         running_loss = 0.0

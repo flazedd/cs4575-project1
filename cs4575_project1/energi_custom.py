@@ -3,11 +3,7 @@ import time
 import os
 import keyboard
 import re
-from colorama import Fore, Style
-
-def print_color(message, success=True):
-    prefix = f"{Fore.GREEN}[+]{Style.RESET_ALL}" if success else f"{Fore.RED}[-]{Style.RESET_ALL}"
-    print(f"{prefix} {message}")
+from utils import print_color
 
 class EnergiCustom:
     def __init__(self, output="results.csv"):
@@ -15,6 +11,7 @@ class EnergiCustom:
         self.seconds = None
         self.process = None
         self.output = output
+
 
     def start(self):
         # Ensure the output directory exists
@@ -48,33 +45,35 @@ class EnergiCustom:
         print_color(f'Saving output in {self.output}')
         # Simulate pressing a key to trigger early output
         keyboard.press_and_release('enter')  # Replace with the key energibridge expects
-
-        # Read the output of the command
-        stdout, stderr = self.process.communicate()
-
-        # Decode stdout and stderr
-        output_text = stdout.decode()
-        error_text = stderr.decode()
-
-        # Regular expression pattern to match joules and seconds
-        pattern = r"Energy consumption in joules: ([\d.]+) for ([\d.]+) sec"
-
-        # Search for the pattern in the output
-        match = re.search(pattern, output_text)
-
+        time.sleep(1)
         self.cleanup()
 
-        # If a match is found, extract the joules and seconds values
-        if match:
-            self.joules = match.group(1)
-            self.seconds = match.group(2)
-            return self.joules, self.seconds
-        else:
-            print_color(f"Energy consumption data not found in output: {output_text}", success=False)
-            if error_text:
-                print_color(f"Error output: {error_text}", success=False)
-            print_color("Possible causes: energibridge failed, RAPL not running (run 'sc start rapl' in Admin CMD), or output directory issue.", success=False)
-            return None, None
+        # Read the output of the command
+        # stdout, stderr = self.process.communicate()
+        #
+        # # Decode stdout and stderr
+        # output_text = stdout.decode()
+        # error_text = stderr.decode()
+        #
+        # # Regular expression pattern to match joules and seconds
+        # pattern = r"Energy consumption in joules: ([\d.]+) for ([\d.]+) sec"
+        #
+        # # Search for the pattern in the output
+        # match = re.search(pattern, output_text)
+        #
+        # self.cleanup()
+        #
+        # # If a match is found, extract the joules and seconds values
+        # if match:
+        #     self.joules = match.group(1)
+        #     self.seconds = match.group(2)
+        #     return self.joules, self.seconds
+        # else:
+        #     print_color(f"Energy consumption data not found in output: {output_text}", success=False)
+        #     if error_text:
+        #         print_color(f"Error output: {error_text}", success=False)
+        #     print_color("Possible causes: energibridge failed, RAPL not running (run 'sc start rapl' in Admin CMD), or output directory issue.", success=False)
+        #     return None, None
 
     def cleanup(self):
         print_color(f'Cleaning up process...')
