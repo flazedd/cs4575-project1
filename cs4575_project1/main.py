@@ -34,7 +34,7 @@ for i in range(iterations):
         frameworks_dict[framework]()
         utils.print_color(f'Framework task completed, stopping measurements...')
         energi.stop()
-        utils.print_color(f'Measurements stopped for {file_output} for iteration {i}')
+        utils.print_color(f'Measurements stopped for {file_output} for iteration {i}, entering cooldown...')
         time.sleep(10) # Pause between runs to avert trail energy consumption
 
 print('')
