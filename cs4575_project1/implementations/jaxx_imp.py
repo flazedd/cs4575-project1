@@ -4,7 +4,7 @@ from flax import linen as nn
 import optax
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
-
+import cs4575_project1.implementations.constants as constants
 
 print("Using jax", jax.__version__)
 
@@ -116,7 +116,7 @@ def jax_task():
             )
             print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
 
-    train(train_loader, epochs=5)
+    train(train_loader, epochs=constants.EPOCHS)
     
 if __name__ == "__main__":
     jax_task()

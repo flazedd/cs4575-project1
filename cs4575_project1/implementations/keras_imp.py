@@ -4,6 +4,7 @@ from tensorflow.keras import layers
 import numpy as np
 import random
 from torchvision import datasets, transforms
+import cs4575_project1.implementations.constants as constants
 
 def set_tensorflow_seed(seed=42):
     # Set the random seed for reproducibility
@@ -70,7 +71,7 @@ def keras_task():
                   metrics=["accuracy"])
 
     # 4️⃣ Train the Model
-    model.fit(x_train, y_train, epochs=5, batch_size=64, validation_data=(x_test, y_test))
+    model.fit(x_train, y_train, epochs=constants.EPOCHS, batch_size=64, validation_data=(x_test, y_test))
 
     # 5️⃣ Evaluate on Test Data
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
