@@ -18,6 +18,15 @@ We have implemented the same exact CNN architecture for each framework and then 
 
 The CNN architecture used is shown in the figure below *insert figure*
 
+- **Convolutional Layer (64 filters, 3x3, ReLU, same padding)** – Extracts local features while maintaining spatial dimensions.
+- **Pooling Layer (2x2, stride 2)** – Reduces spatial size to retain essential features efficiently.
+- **Convolutional Layer (128 filters, 5x5, ReLU, same padding)** – Captures more complex patterns with a larger receptive field.
+- **Pooling Layer (2x2, stride 2)** – Further reduces spatial dimensions to improve computational efficiency.
+- **Flatten Layer** – Converts multi-dimensional feature maps into a 1D vector for classification.
+- **Fully Connected Layer (10 units, softmax activation)** – Produces class probabilities for final classification.
+
+
+
 ### Hardware and software setup
 
 The experiment was conducted on a computer with the following hardware/software:
@@ -59,3 +68,10 @@ Effect size analysis
 
 ### Practical significance
 Do our results really matter in practice?
+
+
+## Discussion
+
+## Limitations & future work
+
+## Conclusion

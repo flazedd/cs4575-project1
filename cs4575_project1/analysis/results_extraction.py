@@ -33,6 +33,8 @@ class Result:
             first_energy_measurement = df["CPU_ENERGY (J)"].iloc[0]
             last_energy_measurement = df["CPU_ENERGY (J)"].iloc[-1]
             used_energy = last_energy_measurement - first_energy_measurement
+            if used_energy < 0:
+                raise Exception("Used energy is negative...")
             self.energy.append(used_energy)
             self.max_energy = max(self.max_energy, used_energy)
             self.min_energy = min(self.min_energy, used_energy)
