@@ -50,7 +50,7 @@ The [MNIST dataset](https://www.kaggle.com/datasets/hojjatk/mnist-dataset) was u
 
 
 ### Evaluation
-Before starting the experiment, the CPU is warmed up for 5 minutes to prevent cold starts which affect energy consumption.
+Before starting the experiment, the CPU is warmed up for 5 minutes doing fibonacci calculations to prevent cold starts which affect energy consumption.
 Then, a sequence of timestamped power measurements are taken for each framework during their execution.
 After the execution of a framework, an idle time of 1 minute is introduced instead of 
 directly measuring the next framework to prevent trail energy usage from influencing the energy usage of the next framework to be evaluated. 
@@ -73,5 +73,10 @@ Do our results really matter in practice?
 ## Discussion
 
 ## Limitations & future work
+We weren't able to measure the CPU temperature on windows...
+For future work different versions of the frameworks could be used or the 
+experiment could be extended to completely new AI frameworks.
+
+
 
 ## Conclusion
