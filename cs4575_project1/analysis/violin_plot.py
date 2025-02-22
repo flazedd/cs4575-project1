@@ -9,6 +9,8 @@ results = []
 data_time = []
 data_power = []
 data_energy = []
+data_normalised_power = []
+data_normalised_energy = []
 for framework in frameworks:
     res = Result(framework, Path(f"../results/{framework}").resolve())
     res.extract()
@@ -16,6 +18,8 @@ for framework in frameworks:
     data_time.append(res.time)
     data_power.append(res.power)
     data_energy.append(res.energy)
+    data_normalised_power.append(res.normalised_power)
+    data_normalised_energy.append(res.normalised_energy)
 
 def plot_violin(data, labels, title, y_label):
     # Create the violin plot
@@ -35,3 +39,5 @@ def plot_violin(data, labels, title, y_label):
 plot_violin(data_time, frameworks, "Time to complete training and evaluation by different frameworks", "Time (s)")
 plot_violin(data_power, frameworks, "Average power use to complete training and evaluation by different frameworks", "Power (W)")
 plot_violin(data_energy, frameworks, "Energy consumed to complete training and evaluation by different frameworks", "Energy (J)")
+plot_violin(data_normalised_power, frameworks, "Power (normalized)", "Normalized power")
+plot_violin(data_normalised_energy, frameworks, "Energy (normalized)", "Normalized energy")
