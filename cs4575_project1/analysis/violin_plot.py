@@ -36,6 +36,7 @@ def plot_violin(data, labels, title, y_label):
     plt.tight_layout()
     plt.show()
 
+
 plot_violin(data_time, frameworks, "Time to complete training and evaluation by different frameworks", "Time (s)")
 plot_violin(data_power, frameworks, "Average power use to complete training and evaluation by different frameworks", "Power (W)")
 plot_violin(data_energy, frameworks, "Energy consumed to complete training and evaluation by different frameworks", "Energy (J)")

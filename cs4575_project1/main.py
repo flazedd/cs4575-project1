@@ -21,8 +21,8 @@ utils.create_framework_dirs(frameworks)
 energi = EnergiCustom()
 iterations = 32
 cooldown = 60
-# utils.cpu_ram_warmup(duration=300)
-for i in range(iterations):
+utils.cpu_ram_warmup(duration=300)
+for i in range(32,42):
     utils.print_color(f'Frameworks before {frameworks}')
     random.shuffle(frameworks)
     utils.print_color(f'Frameworks after {frameworks}')
