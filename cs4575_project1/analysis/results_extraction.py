@@ -25,13 +25,19 @@ class Result:
             df = pd.read_csv(file_path)
             # Compute the time
             first_time_ms = df["Time"].iloc[0]
-            last_time_ms = df["Time"].iloc[-1]
+            last_time_ms = df["Time"].iloc[500]
             time_s = (last_time_ms - first_time_ms) / 1000
             self.time.append(time_s)
 
+            energy_values = df["CPU_ENERGY (J)"]
+
+            for i in range(1, len(energy_values)): # Loop from index 1 to 500
+                if df["CPU_ENERGY (J)"].iloc[i] < df["CPU_ENERGY (J)"].iloc[i - 1]:
+                    raise Exception(f"Energy measurement at index {i} is smaller than the previous value.")
+
             # Compute the energy
             first_energy_measurement = df["CPU_ENERGY (J)"].iloc[0]
-            last_energy_measurement = df["CPU_ENERGY (J)"].iloc[-1]
+            last_energy_measurement = df["CPU_ENERGY (J)"].iloc[500]
             used_energy = last_energy_measurement - first_energy_measurement
             if used_energy < 0:
                 raise Exception("Used energy is negative...")
