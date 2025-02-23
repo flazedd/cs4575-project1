@@ -20,6 +20,7 @@ frameworks = list(frameworks_dict.keys())
 utils.create_framework_dirs(frameworks)
 energi = EnergiCustom()
 iterations = 32
+cooldown = 60
 # utils.cpu_ram_warmup(duration=300)
 for i in range(iterations):
     utils.print_color(f'Frameworks before {frameworks}')
@@ -35,8 +36,8 @@ for i in range(iterations):
         frameworks_dict[framework]()
         utils.print_color(f'Framework task completed, stopping measurements...')
         energi.stop()
-        utils.print_color(f'Measurements stopped for {file_output} for iteration {i}, entering cooldown...')
-        time.sleep(10) # Pause between runs to avert trail energy consumption
+        utils.print_color(f'Measurements stopped for {file_output} for iteration {i}, entering cooldown of {cooldown} seconds...')
+        time.sleep(cooldown) # Pause between runs to avert trail energy consumption
 
 print('')
 utils.print_color('Finished generating all .csv files!')

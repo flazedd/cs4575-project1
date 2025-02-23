@@ -1,1 +1,1 @@
-EPOCHS = 2
+EPOCHS = 3
