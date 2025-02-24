@@ -10,6 +10,7 @@ class Result:
         self.power = []
         self.energy = []
         self.time = []
+        self.edp = []
         self.normalised_power = []
         self.normalised_energy = []
         self.min_power = float('inf')
@@ -45,6 +46,10 @@ class Result:
             self.max_power = max(self.max_power, used_power)
             self.min_power = min(self.min_power, used_power)
 
+            # Compute EDP
+            edp_value = used_energy * time_s
+            self.edp.append(edp_value)
+
         for e in self.energy:
             norm_e = e - self.min_energy / (self.max_energy - self.min_energy)
             self.normalised_energy.append(norm_e)
@@ -54,7 +59,11 @@ class Result:
             self.normalised_power.append(norm_p)
 
     def extract_metrics(self, data, type):
-        shapiro_p_value = stats.shapiro(data)
+        if not data:
+            print(f"No data available for {type}")
+            return
+
+        shapiro_stat, shapiro_p_value = stats.shapiro(data)
         mean_val = np.mean(data)
         median_val = np.median(data)
         var_val = np.var(data, ddof=1)
@@ -77,15 +86,17 @@ class Result:
     def compare_results(self, other):
         print(f"Comparison between libraries {self.name} and {other.name}")
         self_dict = {
-            "time": self.time,
-            "power": self.power,
-            "energy": self.energy
+            "Time": self.time,
+            "Power": self.power,
+            "Energy": self.energy,
+            "EDP": self.edp
         }
 
         other_dict = {
-            "time": other.time,
-            "power": other.power,
-            "energy": other.energy
+            "Time": other.time,
+            "Power": other.power,
+            "Energy": other.energy,
+            "EDP": other.edp
         }
 
         for metric, data_self in self_dict.items():
@@ -101,25 +112,29 @@ class Result:
                 stat, p_value = stats.mannwhitneyu(data_self, data_other, alternative='two-sided')
 
             mean_diff = self.metrics[metric]['Mean'] - other.metrics[metric]['Mean']
-            median_diff = self.metrics[metric]['Median'] - self.metrics[metric]['Median']
+            median_diff = self.metrics[metric]['Median'] - other.metrics[metric]['Median']
 
-            print(f"t-test p-value: {p_value}")
-            print(f"Mean difference: {mean_diff}")
-            print(f"Median difference: {median_diff}")
+            print(f"    Test Used: {test_name}")
+            print(f"    t-test p-value: {p_value}")
+            print(f"    Mean difference: {mean_diff}")
+            print(f"    Median difference: {median_diff}")
         print("---")
 
-    def print_results(self):
+    def print_results(self, k=False):
+        print(f"\n Results for {self.name}")
 
-        print(f"\nResults for {self.name}")
-        print(f"Time (s): {self.time}")
-        print(f"Power (W): {self.power}")
-        print(f"Energy (J): {self.energy}")
+        if k:
+            print(f"Time (s): {self.time}")
+            print(f"Power (W): {self.power}")
+            print(f"Energy (J): {self.energy}")
+            print(f"Energy-Delay Product (EDP): {self.edp}")
 
         if not self.metrics:
             print("No metrics computed yet.")
             return
 
+        print("\nComputed Metrics:")
         for metric, values in self.metrics.items():
-            print(f"\n {metric} metrics:")
+            print(f"{metric} metrics:")
             for key, value in values.items():
-                print(f"   {key}: {value}")
+                print(f"   - {key}: {value:.4f}")
