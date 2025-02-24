@@ -37,8 +37,8 @@ def plot_violin(data, labels, title, y_label):
     plt.show()
 
 
-plot_violin(data_time, frameworks, "Time to complete training and evaluation by different frameworks", "Time (s)")
-plot_violin(data_power, frameworks, "Average power use to complete training and evaluation by different frameworks", "Power (W)")
-plot_violin(data_energy, frameworks, "Energy consumed to complete training and evaluation by different frameworks", "Energy (J)")
+plot_violin(data_time, frameworks, "Time to complete 3 epochs of training by different frameworks", "Time (s)")
+plot_violin(data_power, frameworks, "Average power used to complete 3 epochs of training by different frameworks", "Power (W)")
+plot_violin(data_energy, frameworks, "Energy consumed to complete 3 epochs of training by different frameworks", "Energy (J)")
 plot_violin(data_normalised_power, frameworks, "Power (normalized)", "Normalized power")
 plot_violin(data_normalised_energy, frameworks, "Energy (normalized)", "Normalized energy")
