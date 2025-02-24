@@ -19,11 +19,13 @@ frameworks_dict = {
 frameworks = list(frameworks_dict.keys())
 utils.create_framework_dirs(frameworks)
 energi = EnergiCustom()
-iterations = 30
-utils.cpu_ram_warmup()
-for i in range(iterations):
+iterations = 32
+cooldown = 60
+utils.cpu_ram_warmup(duration=300)
+for i in range(32,42):
+    utils.print_color(f'Frameworks before {frameworks}')
     random.shuffle(frameworks)
-    utils.print_color(f'Randomly shuffled list order: {frameworks}')
+    utils.print_color(f'Frameworks after {frameworks}')
     for framework in frameworks:
         file_output = f"results/{framework}/{framework}_{i}.csv"
         utils.print_color(f'Working on {file_output} for iteration {i}')
@@ -34,8 +36,8 @@ for i in range(iterations):
         frameworks_dict[framework]()
         utils.print_color(f'Framework task completed, stopping measurements...')
         energi.stop()
-        utils.print_color(f'Measurements stopped for {file_output} for iteration {i}, entering cooldown...')
-        time.sleep(10) # Pause between runs to avert trail energy consumption
+        utils.print_color(f'Measurements stopped for {file_output} for iteration {i}, entering cooldown of {cooldown} seconds...')
+        time.sleep(cooldown) # Pause between runs to avert trail energy consumption
 
 print('')
 utils.print_color('Finished generating all .csv files!')

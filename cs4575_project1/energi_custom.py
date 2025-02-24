@@ -45,7 +45,7 @@ class EnergiCustom:
         print_color(f'Saving output in {self.output}')
         # Simulate pressing a key to trigger early output
         keyboard.press_and_release('enter')  # Replace with the key energibridge expects
-        time.sleep(1)
+        time.sleep(5)
         self.cleanup()
 
         # Read the output of the command

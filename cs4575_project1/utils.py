@@ -2,7 +2,7 @@ import os
 from colorama import Fore, Style
 import numpy as np
 import time
-
+from datetime import datetime
 
 def create_framework_dirs(frameworks, base_dir="./results"):
     """
@@ -21,8 +21,9 @@ def create_framework_dirs(frameworks, base_dir="./results"):
 
 
 def print_color(message, success=True):
+    timestamp = datetime.now().strftime("[%H:%M]")  # Get current time in [HH:MM] format
     prefix = f"{Fore.GREEN}[+]{Style.RESET_ALL}" if success else f"{Fore.RED}[-]{Style.RESET_ALL}"
-    print(f"{prefix} {message}")
+    print(f"{timestamp} {prefix} {message}")
 
 
 def cpu_ram_warmup(duration=10, matrix_size=5000):
