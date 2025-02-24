@@ -25,7 +25,7 @@ class Result:
             df = pd.read_csv(file_path)
             # Compute the time
             first_time_ms = df["Time"].iloc[0]
-            last_time_ms = df["Time"].iloc[500]
+            last_time_ms = df["Time"].iloc[-1]
             time_s = (last_time_ms - first_time_ms) / 1000
             self.time.append(time_s)
 
@@ -37,7 +37,7 @@ class Result:
 
             # Compute the energy
             first_energy_measurement = df["CPU_ENERGY (J)"].iloc[0]
-            last_energy_measurement = df["CPU_ENERGY (J)"].iloc[500]
+            last_energy_measurement = df["CPU_ENERGY (J)"].iloc[-1]
             used_energy = last_energy_measurement - first_energy_measurement
             if used_energy < 0:
                 raise Exception("Used energy is negative...")

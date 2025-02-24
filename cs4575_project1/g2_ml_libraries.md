@@ -9,6 +9,30 @@ summary: |-
 ---
 
 ## Introduction
+As machine learning (ML) models grow in complexity and scale, 
+their computational demands have increased, leading to increased 
+energy consumption. Training large-scale deep learning models 
+can require as much energy as powering multiple households for
+weeks, with some studies estimating that training a single deep
+learning model can emit as much carbon as five cars over their 
+lifetime [Strubell et al., 2019](https://aclanthology.org/P19-1355/). Given the rapid expansion of AI applications across industries, optimizing the energy efficiency of ML frameworks is critical for reducing both operational costs and environmental impact.
+
+This paper investigates the energy efficiency of three widely 
+used ML frameworks: Keras, PyTorch, and JAX. Each of these 
+frameworks offers distinct design philosophies and computational 
+optimizations which may significantly impact their 
+energy consumption. While extensive research has been done to compare these frameworks in terms 
+of training speed and model accuracy, fewer studies have focused on their power
+consumption and energy efficiency. Given the scale at which these ML libraries can be deployed in the real world, 
+small differences could quickly lead to significant practical differences in energy consumption.
+
+By systematically measuring energy usage for the same exact workload across 
+different frameworks for multiple iterations, 
+this study aims to provide insights into how ML engineers can make more 
+sustainable choices when selecting a ML framework. The results will be valuable 
+for researchers, developers, and organizations seeking to balance model 
+performance with environmental responsibility and associated costs.
+
 For this experiment we aim to compare the energy consumption of Tensorflow (keras), PyTorch and JAX when training and using a Convolutional Neural Network (CNN).
 We have implemented the same exact CNN architecture for each framework and then we measure energy usage of each.
 
@@ -72,10 +96,19 @@ Do our results really matter in practice?
 
 ## Discussion
 
+
 ## Limitations & future work
-We weren't able to measure the CPU temperature on windows...
-For future work different versions of the frameworks could be used or the 
-experiment could be extended to completely new AI frameworks.
+We set a seed for each ML framework so that it performs the same 
+computations across iterations which reduces variability. 
+A limitation is that we couldn't get the frameworks to all start at the same point 
+so that they would produce the same exact weights and accuracy and so on.
+Still, this should not affect the energy measurements since all frameworks 
+have gone through the same amount of epochs of training. 
+For future work, different versions of the same framework could be 
+used to examine energy efficiency differences between versions. This is relevant
+because when you select a ML framework to work with, you also have to select some
+version to use. The experiment could also be extended to completely 
+new ML frameworks like ...?.
 
 
 
