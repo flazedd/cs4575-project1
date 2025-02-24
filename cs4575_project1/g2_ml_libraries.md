@@ -58,6 +58,13 @@ The experiment was conducted on a computer with the following hardware/software:
 - CPU: AMD Ryzen 5 3600 6 cores@3593Mhz, 12 logical cores
 - RAM: 16GB
 - GPU: NVIDIA RTX 2060 Super
+- Python 3.11.8
+- Poetry 1.8.3 (dependency management)
+- Tensorflow (keras) 2.18.0
+- Torch 2.6.0
+- Jax  0.5.0
+- Other dependencies can be found in the Github repository used to carry out the [experiment](https://github.com/flazedd/cs4575-project1) 
+- [EnergiBridge 0.0.7](https://github.com/tdurieux/EnergiBridge/releases/tag/v0.0.7) is used and the necessary files are already included in the repository
 
 Some other settings under which the experiment runs:
 - All applications are closed in task manager, except an Administrator Powershell which executes the experiment
@@ -74,7 +81,7 @@ The [MNIST dataset](https://www.kaggle.com/datasets/hojjatk/mnist-dataset) was u
 
 
 ### Evaluation
-Before starting the experiment, the CPU is warmed up for 5 minutes doing fibonacci calculations to prevent cold starts which affect energy consumption.
+Before starting the experiment, the CPU is warmed up for 5 minutes by doing calculations to prevent cold starts which affect energy consumption.
 Then, a sequence of timestamped power measurements are taken for each framework during their execution.
 After the execution of a framework, an idle time of 1 minute is introduced instead of 
 directly measuring the next framework to prevent trail energy usage from influencing the energy usage of the next framework to be evaluated. 
