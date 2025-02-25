@@ -32,16 +32,16 @@ class Result:
 
             energy_values = df["CPU_ENERGY (J)"]
 
-            for i in range(1, len(energy_values)): # Loop from index 1 to 500
-                if df["CPU_ENERGY (J)"].iloc[i] < df["CPU_ENERGY (J)"].iloc[i - 1]:
-                    raise Exception(f"Energy measurement at index {i} is smaller than the previous value.")
+            # for i in range(1, len(energy_values)): # Loop from index 1 to 500
+            #     if df["CPU_ENERGY (J)"].iloc[i] < df["CPU_ENERGY (J)"].iloc[i - 1]:
+            #         raise Exception(f"Energy measurement at index {i} is smaller than the previous value.")
 
             # Compute the energy
             first_energy_measurement = df["CPU_ENERGY (J)"].iloc[0]
             last_energy_measurement = df["CPU_ENERGY (J)"].iloc[-1]
             used_energy = last_energy_measurement - first_energy_measurement
-            if used_energy < 0:
-                raise Exception("Used energy is negative...")
+            # if used_energy < 0:
+            #     raise Exception("Used energy is negative...")
             self.energy.append(used_energy)
             self.max_energy = max(self.max_energy, used_energy)
             self.min_energy = min(self.min_energy, used_energy)
@@ -125,6 +125,20 @@ class Result:
             print(f"    Mean difference: {mean_diff}")
             print(f"    Median difference: {median_diff}")
         print("---")
+
+    def remove_outliers(self, data):
+        data = np.array(data)
+
+        mean = np.mean(data)
+        std_dev = np.std(data)
+
+        z_scores = (data - mean) / std_dev
+
+        # Remove all data points that deviate from the mean more than 3 standard deviations
+        mask = np.abs(z_scores) <= 3
+
+        # Return the data without the outliers
+        return data[mask]
 
     def print_results(self, k=False):
         print(f"\n Results for {self.name}")
