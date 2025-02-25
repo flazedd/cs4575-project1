@@ -4,7 +4,7 @@ from flax import linen as nn
 import optax
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
-import cs4575_project1.implementations.constants as constants
+import implementations.constants as constants
 
 print("Using jax", jax.__version__)
 
@@ -50,7 +50,7 @@ def jax_task():
 
     # Initialize model and parameters
     def initialize_model(rng):
-        model = JaxCNN(hidden_channels=[5, 6], out_features=10)
+        model = JaxCNN(hidden_channels=[64, 128], out_features=10)
         params = model.init(rng, jnp.ones((1, 28, 28, 1)))
         return model, params
 

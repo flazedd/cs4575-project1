@@ -67,7 +67,7 @@ class TrainerModule:
 
     # Initialize model and parameters
     def initialize_model(self, rng):
-        model = JaxCNN(hidden_channels=[5, 6], out_features=10)
+        model = JaxCNN(hidden_channels=[64, 128], out_features=10)
         params = model.init(rng, jnp.ones((1, 28, 28, 1)))
         return model, params
 
@@ -147,9 +147,9 @@ class TrainerModule:
         print(f"Test Accuracy: {test_accuracy:.2f}%")
 
 
-def jax_task():
+def jax_jit_task():
     TrainerModule()
 
 
 if __name__ == "__main__":
-    jax_task()
+    jax_jit_task()
