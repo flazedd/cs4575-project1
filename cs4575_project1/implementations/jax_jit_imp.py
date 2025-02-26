@@ -53,7 +53,7 @@ class TrainerModule:
 
         # Initialize model and optimizer
         self.model, self.params = self.initialize_model(self.main_key)
-        self.optimizer = optax.adamw(1e-3)
+        self.optimizer = optax.adamw(constants.LEARNING_RATE)
         self.opt_state = self.optimizer.init(self.params)
 
         # JIT-compiled functions
@@ -102,7 +102,7 @@ class TrainerModule:
         return new_params, new_opt_state
 
     # Train one epoch
-    def train_epoch(self, batch_size=64):
+    def train_epoch(self, batch_size=constants.BATCH_SIZE):
         running_loss = 0.0
         correct = 0
         total = 0
@@ -134,13 +134,13 @@ class TrainerModule:
         return train_loss, train_accuracy
 
     # Main training function
-    def train(self, epochs=constants.EPOCHS, batch_size=64):
+    def train(self, epochs=constants.EPOCHS, batch_size=constants.BATCH_SIZE):
         for epoch in range(epochs):
             train_loss, train_accuracy = self.train_epoch(batch_size)
             print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
 
     # Evaluation function
-    def eval(self, batch_size=64):
+    def eval(self, batch_size=constants.BATCH_SIZE):
         correct = 0
         total = 0
         num_samples = self.x_test.shape[0]
