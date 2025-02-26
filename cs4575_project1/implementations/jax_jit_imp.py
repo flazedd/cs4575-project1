@@ -4,7 +4,7 @@ from flax import linen as nn
 import optax
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
-import implementations.constants as constants
+import cs4575_project1.implementations.constants as constants
 
 print("Using jax", jax.__version__)
 
@@ -48,8 +48,10 @@ class TrainerModule:
         self.train_dataset = datasets.MNIST(root='./data', train=True, download=False, transform=transform)
         self.test_dataset = datasets.MNIST(root='./data', train=False, download=False, transform=transform)
 
-        self.train_loader = DataLoader(self.train_dataset, batch_size=64, shuffle=True)
-        self.test_loader = DataLoader(self.test_dataset, batch_size=64, shuffle=False)
+        self.train_loader = DataLoader(self.train_dataset, batch_size=constants.BATCH_SIZE, shuffle=True)
+        self.test_loader = DataLoader(self.test_dataset, batch_size=constants.BATCH_SIZE, shuffle=False)
+
+        cpu_device = jax.devices("cpu")[0]  # Get the CPU device
 
         # Initialize model and optimizer
         self.model, self.params = self.initialize_model(self.main_key)
@@ -98,6 +100,10 @@ class TrainerModule:
         correct = 0
         total = 0
 
+        # Place inputs and labels explicitly on CPU
+        inputs = jax.device_put(inputs, cpu_device)
+        labels = jax.device_put(labels, cpu_device)
+
         for inputs, labels in self.train_loader:
             inputs = inputs.permute(0, 2, 3, 1)  # Rearrange to (B, H, W, C), since JAX uses Channel as last dim
 
@@ -121,7 +127,7 @@ class TrainerModule:
         return train_loss, train_accuracy
 
     # Main training function
-    def train(self, data_loader, epochs=constants.EPOCHS, learning_rate=1e-3):
+    def train(self, data_loader, epochs=constants.EPOCHS, learning_rate=constants.LEARNING_RATE):
         for epoch in range(epochs):
             train_loss, train_accuracy = self.train_epoch()
             print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
@@ -136,6 +142,10 @@ class TrainerModule:
             # Convert inputs and labels to JAX arrays
             inputs = jnp.array(inputs.numpy())
             labels = jnp.array(labels.numpy())
+
+            # Place inputs and labels explicitly on CPU
+            inputs = jax.device_put(inputs, cpu_device)
+            labels = jax.device_put(labels, cpu_device)
 
             # Compute metrics
             logits = self.model.apply(self.params, inputs)

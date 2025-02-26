@@ -58,7 +58,9 @@ def torch_task():
 
     # 3️⃣ Compile the Model (define loss and optimizer)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters())
+    # optimizer = optim.Adam(model.parameters())
+    learning_rate = 0.001  # Explicitly defining the learning rate
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     # Set device; for consistency, using CPU here
     device = torch.device('cpu')

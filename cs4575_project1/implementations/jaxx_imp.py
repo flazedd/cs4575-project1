@@ -4,10 +4,11 @@ from flax import linen as nn
 import optax
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
-import implementations.constants as constants
+import cs4575_project1.implementations.constants as constants
 
 print("Using jax", jax.__version__)
 
+cpu_device = jax.devices("cpu")[0]  # Get the CPU device
 
 def set_seed(seed=42):
     return jax.random.PRNGKey(seed)
@@ -25,8 +26,8 @@ def jax_task():
     train_dataset = datasets.MNIST(root='./data', train=True, download=False, transform=transform)
     test_dataset = datasets.MNIST(root='./data', train=False, download=False, transform=transform)
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=constants.BATCH_SIZE, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=constants.BATCH_SIZE, shuffle=False)
 
 
     class JaxCNN(nn.Module):
@@ -38,7 +39,6 @@ def jax_task():
             x = nn.Conv(features=self.hidden_channels[0], kernel_size=(3, 3), padding=1)(x)
             x = nn.relu(x)
             x = nn.max_pool(x, (2, 2), strides=(2, 2))
-
             x = nn.Conv(features=self.hidden_channels[1], kernel_size=(5, 5), padding=2)(x)
             x = nn.relu(x)
             x = nn.max_pool(x, (2, 2), strides=(2, 2))
@@ -105,7 +105,7 @@ def jax_task():
         return params, opt_state, train_loss, train_accuracy
 
     # Main training function
-    def train(train_loader, epochs=5, learning_rate=1e-3):
+    def train(train_loader, epochs=constants.EPOCHS, learning_rate=constants.LEARNING_RATE):
         model, params = initialize_model(main_key)
         optimizer = optax.adamw(learning_rate)
         opt_state = optimizer.init(params)
@@ -118,7 +118,7 @@ def jax_task():
 
         return model, params, optimizer, opt_state
 
-    model, params, optimizer, opt_state = train(train_loader, epochs=constants.EPOCHS)
+    model, params, optimizer, opt_state = train(train_loader)
 
     # Eval step
     correct = 0
