@@ -37,18 +37,18 @@ def keras_task():
     # 2️⃣ Define CNN Model
     model = keras.Sequential([
     # First Convolutional Layer
-    layers.Conv2D(64, kernel_size=3, padding="same", activation="relu", input_shape=(28, 28, 1)),
+    layers.Conv2D(64, kernel_size=3, padding=1, activation="relu", input_shape=(28, 28, 1)),
     layers.MaxPooling2D(pool_size=2, strides=2),
 
     # Second Convolutional Layer
-    layers.Conv2D(128, kernel_size=5, padding="same", activation="relu"),
+    layers.Conv2D(128, kernel_size=5, padding=2, activation="relu"),
     layers.MaxPooling2D(pool_size=2, strides=2),
 
     # Flatten Layer (equivalent to x.view(x.size(0), -1) in PyTorch)
     layers.Flatten(),
 
     # Fully Connected Layer
-    layers.Dense(10, activation="softmax")  # Assuming the output has 10 classes, like MNIST
+    layers.Dense(10, activation="softmax")  # 10 output classes
 ])
 
     # 3️⃣ Compile the Model

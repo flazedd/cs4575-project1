@@ -39,11 +39,11 @@ def torch_task():
             super(CNNModel, self).__init__()
             self.conv1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, padding=1)
             self.relu1 = nn.ReLU()
-            self.max_pool1 = nn.MaxPool2d(2)
+            self.max_pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
 
             self.conv2 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=5, padding=2)
             self.relu2 = nn.ReLU()
-            self.max_pool2 = nn.MaxPool2d(2)
+            self.max_pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
             self.fc = nn.Linear(7 * 7 * 128, 10)  # 7*7*128 is the flattened size after pooling
 
