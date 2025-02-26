@@ -26,7 +26,12 @@ def keras_task():
     data = np.load(dataset_path)
     x_train, y_train = data['x_train'], data['y_train']
     x_test, y_test = data['x_test'], data['y_test']
-    
+
+    print('')
+    print(f"Number of training images: {len(x_train)}")
+    print(f"Number of test images: {len(x_test)}")
+    print('')
+
     # Normalize pixel values to [0, 1]
     x_train, x_test = x_train / 255.0, x_test / 255.0
     

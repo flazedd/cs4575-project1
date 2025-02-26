@@ -44,8 +44,14 @@ class TrainerModule:
         train_dataset = mnist_data['train']
         test_dataset = mnist_data['test']
 
+
         self.x_train, self.y_train = self.convert_tfds_to_jax(train_dataset)
         self.x_test, self.y_test = self.convert_tfds_to_jax(test_dataset)
+
+        print('')
+        print(f"Number of training images: {len(self.x_train)}")
+        print(f"Number of test images: {len(self.x_test)}")
+        print('')
 
         # Normalize images to [0, 1]
         self.x_train = self.x_train / 255.0
