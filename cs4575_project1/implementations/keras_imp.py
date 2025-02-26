@@ -57,7 +57,11 @@ def keras_task():
                   metrics=["accuracy"])
 
     # 4️⃣ Train the Model
-    model.fit(x_train, y_train, epochs=constants.EPOCHS, batch_size=64, validation_data=(x_test, y_test))
+    # Train the model on CPU
+    device = '/CPU:0'
+    with tf.device(device):
+        model.fit(x_train, y_train, epochs=constants.EPOCHS, batch_size=constants.BATCH_SIZE,
+                  validation_data=(x_test, y_test))
 
     # 5️⃣ Evaluate on Test Data
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
