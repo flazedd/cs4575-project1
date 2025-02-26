@@ -27,8 +27,13 @@ def torch_task():
     ])
 
     # Ensure the dataset is available; set download=True if needed
-    train_dataset = datasets.MNIST(root='.\data\pytorch', train=True, download=False, transform=transform)
-    test_dataset  = datasets.MNIST(root='.\data\pytorch', train=False, download=False, transform=transform)
+    train_dataset = datasets.MNIST(root='.\data\pytorch', train=True, download=True, transform=transform)
+    test_dataset  = datasets.MNIST(root='.\data\pytorch', train=False, download=True, transform=transform)
+
+    print('')
+    print(f"Number of training images: {len(train_dataset)}")
+    print(f"Number of test images: {len(test_dataset)}")
+    print('')
 
     train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
     test_loader  = DataLoader(test_dataset, batch_size=64, shuffle=False)
