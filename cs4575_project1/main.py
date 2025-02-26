@@ -1,6 +1,6 @@
 import time
 from energi_custom import EnergiCustom
-from implementations.jaxx_imp import jax_task
+from implementations.jax_jit_imp import jax_jit_task
 from cs4575_project1.implementations.keras_imp import keras_task
 from implementations.pytorch_imp import torch_task
 import utils
@@ -14,7 +14,7 @@ def sleep():
 frameworks_dict = {
     "keras": keras_task,
     "torch": torch_task,
-    "jaxx": jax_task,
+    "jax": jax_jit_task,
 }
 frameworks = list(frameworks_dict.keys())
 utils.create_framework_dirs(frameworks)

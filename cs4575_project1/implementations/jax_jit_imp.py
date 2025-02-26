@@ -2,11 +2,15 @@ import jax
 from jax import numpy as jnp
 from flax import linen as nn
 import optax
-from torchvision import transforms, datasets
-from torch.utils.data import DataLoader
-import implementations.constants as constants
+import cs4575_project1.implementations.constants as constants
+import numpy as np
+import tensorflow_datasets as tfds
+
 
 print("Using jax", jax.__version__)
+
+def set_seed(seed=42):
+    return jax.random.PRNGKey(seed)
 
 class JaxCNN(nn.Module):
     hidden_channels: list  # Hidden channels for two conv layers
@@ -26,12 +30,7 @@ class JaxCNN(nn.Module):
         x_out = nn.Dense(self.out_features)(x)
 
         return x_out
-
-
-def set_seed(seed=42):
-    return jax.random.PRNGKey(seed)
-
-
+    
 class TrainerModule:
     def __init__(self):
         self.model = None
@@ -40,16 +39,17 @@ class TrainerModule:
         self.params = None
         self.main_key = set_seed(42)
 
-        transform = transforms.Compose([
-            transforms.ToTensor(),  # Convert to tensor
-            transforms.Normalize((0,), (1,))  # Normalize
-        ])
+        # Load MNIST dataset using TFDS
+        mnist_data = tfds.load('mnist', as_supervised=True, data_dir='./data/jax')
+        train_dataset = mnist_data['train']
+        test_dataset = mnist_data['test']
 
-        self.train_dataset = datasets.MNIST(root='./data', train=True, download=False, transform=transform)
-        self.test_dataset = datasets.MNIST(root='./data', train=False, download=False, transform=transform)
+        self.x_train, self.y_train = self.convert_tfds_to_jax(train_dataset)
+        self.x_test, self.y_test = self.convert_tfds_to_jax(test_dataset)
 
-        self.train_loader = DataLoader(self.train_dataset, batch_size=64, shuffle=True)
-        self.test_loader = DataLoader(self.test_dataset, batch_size=64, shuffle=False)
+        # Normalize images to [0, 1]
+        self.x_train = self.x_train / 255.0
+        self.x_test = self.x_test / 255.0
 
         # Initialize model and optimizer
         self.model, self.params = self.initialize_model(self.main_key)
@@ -61,9 +61,18 @@ class TrainerModule:
         self.eval_step_ = jax.jit(self.eval)
 
         print("training JAX...")
-        self.train(self.train_loader)
+        self.train()
         self.eval()
 
+    # Converts numpy from tensorflow_datasets to jnp
+    def convert_tfds_to_jax(self, dataset):
+            images, labels = [], []
+            for img, lbl in tfds.as_numpy(dataset):
+                images.append(img)
+                labels.append(lbl)
+            images = np.stack(images)  # Shape: (N, 28, 28, 1)
+            labels = np.array(labels)  # Shape: (N,)
+            return jnp.array(images), jnp.array(labels)
 
     # Initialize model and parameters
     def initialize_model(self, rng):
@@ -93,19 +102,23 @@ class TrainerModule:
         return new_params, new_opt_state
 
     # Train one epoch
-    def train_epoch(self):
+    def train_epoch(self, batch_size=64):
         running_loss = 0.0
         correct = 0
         total = 0
+        num_samples = self.x_train.shape[0]
+        num_batches = num_samples // batch_size
 
-        for inputs, labels in self.train_loader:
-            inputs = inputs.permute(0, 2, 3, 1)  # Rearrange to (B, H, W, C), since JAX uses Channel as last dim
+        # Shuffle training data
+        key, subkey = jax.random.split(self.main_key)
+        indices = jax.random.permutation(subkey, num_samples)
 
-            # Convert inputs and labels to JAX arrays
-            inputs = jnp.array(inputs.numpy())
-            labels = jnp.array(labels.numpy())
+        for i in range(num_batches):
+            batch_idx = indices[i * batch_size:(i + 1) * batch_size]
+            inputs = self.x_train[batch_idx]
+            labels = self.y_train[batch_idx]
 
-            # Perform a training step
+            # Perform training step
             self.params, self.opt_state = self.train_step_(self.params, self.opt_state, inputs, labels)
 
             # Compute metrics
@@ -116,28 +129,27 @@ class TrainerModule:
             total += labels.shape[0]
             correct += (predicted == labels).sum().item()
 
-        train_loss = running_loss / len(self.train_loader)
+        train_loss = running_loss / num_batches
         train_accuracy = 100 * correct / total
         return train_loss, train_accuracy
 
     # Main training function
-    def train(self, data_loader, epochs=constants.EPOCHS, learning_rate=1e-3):
+    def train(self, epochs=constants.EPOCHS, batch_size=64):
         for epoch in range(epochs):
-            train_loss, train_accuracy = self.train_epoch()
+            train_loss, train_accuracy = self.train_epoch(batch_size)
             print(f"Epoch [{epoch + 1}/{epochs}], Loss: {train_loss:.4f}, Accuracy: {train_accuracy:.2f}%")
 
     # Evaluation function
-    def eval(self):
+    def eval(self, batch_size=64):
         correct = 0
         total = 0
-        for inputs, labels in self.test_loader:
-            inputs = inputs.permute(0, 2, 3, 1)  # Rearrange to (B, H, W, C), since JAX uses Channel as last dim
+        num_samples = self.x_test.shape[0]
+        num_batches = num_samples // batch_size
 
-            # Convert inputs and labels to JAX arrays
-            inputs = jnp.array(inputs.numpy())
-            labels = jnp.array(labels.numpy())
+        for i in range(num_batches):
+            inputs = self.x_test[i * batch_size:(i + 1) * batch_size]
+            labels = self.y_test[i * batch_size:(i + 1) * batch_size]
 
-            # Compute metrics
             logits = self.model.apply(self.params, inputs)
             predicted = jnp.argmax(logits, axis=1)
             total += labels.shape[0]
@@ -145,7 +157,6 @@ class TrainerModule:
 
         test_accuracy = 100 * correct / total
         print(f"Test Accuracy: {test_accuracy:.2f}%")
-
 
 def jax_jit_task():
     TrainerModule()
