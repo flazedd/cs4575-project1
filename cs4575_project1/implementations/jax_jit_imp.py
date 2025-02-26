@@ -90,16 +90,17 @@ class TrainerModule:
     # Train one batch
     def train_step(self, params, opt_state, inputs, labels):
         def loss_fn(params):
-            return self.compute_loss(params, inputs, labels)
+            logits = self.model.apply(params, inputs)
+            one_hot_labels = jax.nn.one_hot(labels, num_classes=10)
+            loss = optax.softmax_cross_entropy(logits, one_hot_labels).mean()
+            return loss, logits  # Return both loss and logits
 
-        # Compute gradients
-        grads = jax.grad(loss_fn)(params)
-
+        # Compute loss, logits, and gradients
+        (loss, logits), grads = jax.value_and_grad(loss_fn, has_aux=True)(params)
         # Update parameters and optimizer state
         updates, new_opt_state = self.optimizer.update(grads, opt_state, params)
         new_params = optax.apply_updates(params, updates)
-
-        return new_params, new_opt_state
+        return new_params, new_opt_state, loss, logits
 
     # Train one epoch
     def train_epoch(self, batch_size=constants.BATCH_SIZE):
@@ -118,16 +119,14 @@ class TrainerModule:
             inputs = self.x_train[batch_idx]
             labels = self.y_train[batch_idx]
 
-            # Perform training step
-            self.params, self.opt_state = self.train_step_(self.params, self.opt_state, inputs, labels)
+            # Perform training step and get loss and logits
+            self.params, self.opt_state, loss, logits = self.train_step_(self.params, self.opt_state, inputs, labels)
 
             # Compute metrics
-            logits = self.model.apply(self.params, inputs)
-            loss = self.compute_loss(self.params, inputs, labels)
-            running_loss += loss.item()
             predicted = jnp.argmax(logits, axis=1)
             total += labels.shape[0]
             correct += (predicted == labels).sum().item()
+            running_loss += loss.item()
 
         train_loss = running_loss / num_batches
         train_accuracy = 100 * correct / total
