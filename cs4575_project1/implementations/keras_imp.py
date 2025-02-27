@@ -3,7 +3,6 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import numpy as np
 import random
-from torchvision import datasets, transforms
 import cs4575_project1.implementations.constants as constants
 
 def set_tensorflow_seed(seed=42):
@@ -12,38 +11,30 @@ def set_tensorflow_seed(seed=42):
     random.seed(seed)
     tf.random.set_seed(seed)
 
-
 def keras_task():
-    # Example usage:
+    # Set seed
     set_tensorflow_seed(42)
+
     # 1️⃣ Load & Preprocess MNIST Dataset
-    # (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-    #
-    # # Normalize pixel values to [0, 1]
-    # x_train, x_test = x_train / 255.0, x_test / 255.0
-    #
-    # # Add channel dimension (for Conv2D)
-    # x_train = x_train.reshape(-1, 28, 28, 1)
-    # x_test = x_test.reshape(-1, 28, 28, 1)
-    # Load MNIST dataset using PyTorch
-    transform = transforms.Compose([
-        transforms.ToTensor(),  # Convert to tensor
-        transforms.Normalize((0,), (1,))  # Normalize
-    ])
+    # Download MNIST if not already downloaded
+    dataset_path = tf.keras.utils.get_file(
+    fname="mnist.npz",  # Mnist
+    origin="https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz",
+    cache_dir="./data/keras"  # Download directory
+    )
+    #  Load the data using numpy
+    data = np.load(dataset_path)
+    x_train, y_train = data['x_train'], data['y_train']
+    x_test, y_test = data['x_test'], data['y_test']
 
-    train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-    test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+    print('')
+    print(f"Number of training images: {len(x_train)}")
+    print(f"Number of test images: {len(x_test)}")
+    print('')
 
-    # Convert PyTorch tensors to NumPy arrays
-    x_train = np.array([np.array(train_dataset[i][0]) for i in range(len(train_dataset))])
-    y_train = np.array([train_dataset[i][1] for i in range(len(train_dataset))])
-
-    x_test = np.array([np.array(test_dataset[i][0]) for i in range(len(test_dataset))])
-    y_test = np.array([test_dataset[i][1] for i in range(len(test_dataset))])
-
-    # Normalize pixel values to [0,1] (same as TensorFlow)
+    # Normalize pixel values to [0, 1]
     x_train, x_test = x_train / 255.0, x_test / 255.0
-
+    
     # Add channel dimension for TensorFlow (for Conv2D)
     x_train = x_train.reshape(-1, 28, 28, 1)
     x_test = x_test.reshape(-1, 28, 28, 1)
@@ -62,7 +53,7 @@ def keras_task():
     layers.Flatten(),
 
     # Fully Connected Layer
-    layers.Dense(10, activation="softmax")  # Assuming the output has 10 classes, like MNIST
+    layers.Dense(10, activation="softmax")  # 10 output classes
 ])
 
     # 3️⃣ Compile the Model
@@ -71,7 +62,11 @@ def keras_task():
                   metrics=["accuracy"])
 
     # 4️⃣ Train the Model
-    model.fit(x_train, y_train, epochs=constants.EPOCHS, batch_size=64, validation_data=(x_test, y_test))
+    # Train the model on CPU
+    device = '/CPU:0'
+    with tf.device(device):
+        model.fit(x_train, y_train, epochs=constants.EPOCHS, batch_size=constants.BATCH_SIZE,
+                  validation_data=(x_test, y_test))
 
     # 5️⃣ Evaluate on Test Data
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
