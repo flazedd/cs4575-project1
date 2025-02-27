@@ -17,12 +17,12 @@ frameworks_dict = {
     "jax": jax_jit_task,
 }
 frameworks = list(frameworks_dict.keys())
-dir = './results_reinier'
+dir = './results_alex'
 utils.create_framework_dirs(frameworks, dir)
 energi = EnergiCustom()
 iterations = 32
 cooldown = 60
-# utils.cpu_ram_warmup(duration=300)
+utils.cpu_ram_warmup(duration=300)
 for i in range(0,42):
     utils.print_color(f'Frameworks before {frameworks}')
     random.shuffle(frameworks)
