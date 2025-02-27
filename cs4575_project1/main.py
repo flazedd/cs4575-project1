@@ -17,7 +17,7 @@ frameworks_dict = {
     "jax": jax_jit_task,
 }
 frameworks = list(frameworks_dict.keys())
-dir = './results_reinier'
+dir = './results_reinier2'
 utils.create_framework_dirs(frameworks, dir)
 energi = EnergiCustom()
 iterations = 32

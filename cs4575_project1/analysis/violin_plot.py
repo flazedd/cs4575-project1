@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from cs4575_project1.analysis.results_extraction import Result
 from pathlib import Path
-dir = 'results_reinier'
+dir = 'results_reinier2'
 frameworks = ['keras', 'torch', 'jax']
 results = []
 data_time = []

@@ -1,8 +1,3 @@
 EPOCHS = 1
-
-
-
-
-
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
