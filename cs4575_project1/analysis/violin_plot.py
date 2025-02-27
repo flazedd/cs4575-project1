@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from cs4575_project1.analysis.results_extraction import Result
 from pathlib import Path
+
 dir = 'results_reinier2'
 frameworks = ['keras', 'torch', 'jax']
 results = []
@@ -12,6 +13,7 @@ data_energy = []
 data_edp = []
 data_normalised_power = []
 data_normalised_energy = []
+data_normalised_edp = []
 for framework in frameworks:
     res = Result(framework, Path(f"../{dir}/{framework}").resolve())
     res.extract()
@@ -20,8 +22,34 @@ for framework in frameworks:
     data_power.append(res.power)
     data_energy.append(res.energy)
     data_edp.append(res.edp)
-    data_normalised_power.append(res.normalised_power)
-    data_normalised_energy.append(res.normalised_energy)
+
+
+# Global min-max normalization
+def normalize_min_max_global(data_list):
+    all_values = []
+    for data in data_list:
+        all_values.extend(data)
+
+    if not all_values:
+        return [[] for _ in data_list]
+
+    global_min = min(all_values)
+    global_max = max(all_values)
+
+    normalized_data = []
+    for data in data_list:
+        if global_max > global_min:
+            normalized = [(x - global_min) / (global_max - global_min) for x in data]
+        else:
+            normalized = [0.5 for _ in data]
+        normalized_data.append(normalized)
+
+    return normalized_data
+
+
+data_normalised_power = normalize_min_max_global(data_power)
+data_normalised_energy = normalize_min_max_global(data_energy)
+data_normalised_edp = normalize_min_max_global(data_edp)
 
 save_dir = Path(f"../{dir}/plots")
 save_dir.mkdir(exist_ok=True, parents=True)
@@ -65,6 +93,8 @@ plot_box_violin(data_normalised_power, frameworks, "Power (normalized)", "Normal
                 "normalized_power_plot.png")
 plot_box_violin(data_normalised_energy, frameworks, "Energy (normalized)", "Normalized energy",
                 "normalized_energy_plot.png")
+plot_box_violin(data_normalised_edp, frameworks, "Energy-Delay Product (EDP) (normalized)", "Normalised EDP",
+                "normalized_edp_plot.png")
 # =======
 # plot_violin(data_time, frameworks, "Time to complete 3 epochs of training by different frameworks", "Time (s)")
 # plot_violin(data_power, frameworks, "Average power used to complete 3 epochs of training by different frameworks", "Power (W)")

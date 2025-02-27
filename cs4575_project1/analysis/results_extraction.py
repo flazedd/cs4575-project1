@@ -11,12 +11,6 @@ class Result:
         self.energy = []
         self.time = []
         self.edp = []
-        self.normalised_power = []
-        self.normalised_energy = []
-        self.min_power = float('inf')
-        self.max_power = float('-inf')
-        self.min_energy = float('inf')
-        self.max_energy = float('-inf')
         self.metrics = {}
         self.name = name
         self.path_dir = Path(path_dir).resolve()
@@ -32,7 +26,7 @@ class Result:
 
             energy_values = df["CPU_ENERGY (J)"]
 
-            for i in range(1, len(energy_values)): # Loop from index 1 to 500
+            for i in range(1, len(energy_values)):  # Loop from index 1 to 500
                 if df["CPU_ENERGY (J)"].iloc[i] < df["CPU_ENERGY (J)"].iloc[i - 1]:
                     raise Exception(f"Energy measurement at index {i} is smaller than the previous value.")
 
@@ -43,26 +37,14 @@ class Result:
             # if used_energy < 0:
             #     raise Exception("Used energy is negative...")
             self.energy.append(used_energy)
-            self.max_energy = max(self.max_energy, used_energy)
-            self.min_energy = min(self.min_energy, used_energy)
 
             # Compute the power
             used_power = used_energy / time_s
             self.power.append(used_power)
-            self.max_power = max(self.max_power, used_power)
-            self.min_power = min(self.min_power, used_power)
 
             # Compute EDP
             edp_value = used_energy * time_s
             self.edp.append(edp_value)
-
-        for e in self.energy:
-            norm_e = e - self.min_energy / (self.max_energy - self.min_energy)
-            self.normalised_energy.append(norm_e)
-
-        for p in self.power:
-            norm_p = p - self.min_power / (self.max_power - self.min_power)
-            self.normalised_power.append(norm_p)
 
     def extract_metrics(self, data, type):
         if not data:
@@ -95,14 +77,16 @@ class Result:
             "Time": self.time,
             "Power": self.power,
             "Energy": self.energy,
-            "EDP": self.edp
+            "EDP": self.edp,
+            "Normalised EDP": self.normalised_edp  # Added normalized EDP for comparison
         }
 
         other_dict = {
             "Time": other.time,
             "Power": other.power,
             "Energy": other.energy,
-            "EDP": other.edp
+            "EDP": other.edp,
+            "Normalised EDP": other.normalised_edp  # Added normalized EDP for comparison
         }
 
         for metric, data_self in self_dict.items():
@@ -148,6 +132,7 @@ class Result:
             print(f"Power (W): {self.power}")
             print(f"Energy (J): {self.energy}")
             print(f"Energy-Delay Product (EDP): {self.edp}")
+            print(f"Normalised EDP: {self.normalised_edp}")  # Added to print normalized EDP
 
         if not self.metrics:
             print("No metrics computed yet.")
@@ -157,4 +142,4 @@ class Result:
         for metric, values in self.metrics.items():
             print(f"{metric} metrics:")
             for key, value in values.items():
-                print(f"   - {key}: {value:.4f}")
+                print(f"   - {key}: {value}")
