@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from cs4575_project1.analysis.results_extraction import Result
 from pathlib import Path
-
-frameworks = ['keras', 'torch', 'jaxx']
+dir = 'results_reinier'
+frameworks = ['keras', 'torch', 'jax']
 results = []
 data_time = []
 data_power = []
@@ -13,7 +13,7 @@ data_edp = []
 data_normalised_power = []
 data_normalised_energy = []
 for framework in frameworks:
-    res = Result(framework, Path(f"../results/{framework}").resolve())
+    res = Result(framework, Path(f"../{dir}/{framework}").resolve())
     res.extract()
     results.append(res)
     data_time.append(res.time)
@@ -23,7 +23,7 @@ for framework in frameworks:
     data_normalised_power.append(res.normalised_power)
     data_normalised_energy.append(res.normalised_energy)
 
-save_dir = Path("../results/plots")
+save_dir = Path(f"../{dir}/plots")
 save_dir.mkdir(exist_ok=True, parents=True)
 
 
