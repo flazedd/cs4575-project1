@@ -1,11 +1,11 @@
 from cs4575_project1.analysis.results_extraction import Result
 from pathlib import Path
 
-frameworks = ['keras', 'torch', 'jaxx']
+frameworks = ['keras', 'torch', 'jax', 'jax_jit']
 results = []
 
 for framework in frameworks:
-    res = Result(framework, Path(f"../results/{framework}").resolve())
+    res = Result(framework, Path(f"../results_mao/{framework}").resolve())
     res.extract()
     res.extract_metrics(res.time, "Time")
     res.extract_metrics(res.energy, "Energy")

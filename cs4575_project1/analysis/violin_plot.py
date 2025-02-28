@@ -4,8 +4,8 @@ import seaborn as sns
 from cs4575_project1.analysis.results_extraction import Result
 from pathlib import Path
 
-dir = 'results_reinier2'
-frameworks = ['keras', 'torch', 'jax']
+dir = 'results_mao'
+frameworks = ['keras', 'torch','jax_jit', 'jax']
 results = []
 data_time = []
 data_power = []
