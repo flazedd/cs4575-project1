@@ -56,6 +56,7 @@ save_dir.mkdir(exist_ok=True, parents=True)
 
 
 def plot_box_violin(data, labels, title, y_label, filename):
+    labels = ["Keras", "PyTorch", "JAX"]
     plt.figure(figsize=(10, 6))
     positions = np.arange(len(labels))
 
