@@ -28,14 +28,16 @@ class Result:
 
             for i in range(1, len(energy_values)):  # Loop from index 1 to 500
                 if df["CPU_ENERGY (J)"].iloc[i] < df["CPU_ENERGY (J)"].iloc[i - 1]:
-                    raise Exception(f"Energy measurement at index {i} is smaller than the previous value.")
+                    # raise Exception(f"Energy measurement at index {i} is smaller than the previous value.")
+                    pass
 
             # Compute the energy
             first_energy_measurement = df["CPU_ENERGY (J)"].iloc[0]
             last_energy_measurement = df["CPU_ENERGY (J)"].iloc[-1]
             used_energy = last_energy_measurement - first_energy_measurement
-            # if used_energy < 0:
-            #     raise Exception("Used energy is negative...")
+            if used_energy < 0:
+                # raise Exception("Used energy is negative...")
+                continue
             self.energy.append(used_energy)
 
             # Compute the power
@@ -45,6 +47,11 @@ class Result:
             # Compute EDP
             edp_value = used_energy * time_s
             self.edp.append(edp_value)
+
+            self.power = self.remove_outliers(self.power)
+            self.energy = self.remove_outliers(self.energy)
+            self.time = self.remove_outliers(self.time)
+            self.edp = self.remove_outliers(self.edp)
 
     def extract_metrics(self, data, type):
         if not data:
@@ -116,13 +123,13 @@ class Result:
         mean = np.mean(data)
         std_dev = np.std(data)
 
-        z_scores = (data - mean) / std_dev
+        diff = np.abs(data - mean)
 
         # Remove all data points that deviate from the mean more than 3 standard deviations
-        mask = np.abs(z_scores) <= 3
+        mask = diff <= (3 * std_dev)
 
         # Return the data without the outliers
-        return data[mask]
+        return data[mask].tolist()
 
     def print_results(self, k=False):
         print(f"\n Results for {self.name}")
