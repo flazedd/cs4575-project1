@@ -48,10 +48,10 @@ class Result:
             edp_value = used_energy * time_s
             self.edp.append(edp_value)
 
-            self.power = self.remove_outliers(self.power)
-            self.energy = self.remove_outliers(self.energy)
-            self.time = self.remove_outliers(self.time)
-            self.edp = self.remove_outliers(self.edp)
+        self.power = self.remove_outliers(self.power)
+        self.energy = self.remove_outliers(self.energy)
+        self.time = self.remove_outliers(self.time)
+        self.edp = self.remove_outliers(self.edp)
 
     def extract_metrics(self, data, type):
         if not data:
