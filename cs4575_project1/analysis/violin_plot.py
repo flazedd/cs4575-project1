@@ -5,7 +5,7 @@ from cs4575_project1.analysis.results_extraction import Result
 from pathlib import Path
 
 dir = 'results_mao'
-frameworks = ['keras', 'torch','jax_jit', 'jax']
+frameworks = ['keras', 'torch','jax_jit']
 results = []
 data_time = []
 data_power = []
